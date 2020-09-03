@@ -531,7 +531,7 @@ GameObject:
   m_Component:
   - component: {fileID: 194641076}
   m_Layer: 5
-  m_Name: MoneyButtons (1)
+  m_Name: FeedButtons
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -731,7 +731,7 @@ GameObject:
   - component: {fileID: 261321574}
   - component: {fileID: 261321573}
   m_Layer: 5
-  m_Name: MoneyImage
+  m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -926,7 +926,7 @@ GameObject:
   - component: {fileID: 320909573}
   - component: {fileID: 320909572}
   m_Layer: 5
-  m_Name: MoneyImage
+  m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1239,7 +1239,7 @@ GameObject:
   m_Component:
   - component: {fileID: 370813141}
   m_Layer: 5
-  m_Name: MoneyButtons (2)
+  m_Name: DessertButtons
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1279,7 +1279,7 @@ GameObject:
   m_Component:
   - component: {fileID: 409535821}
   m_Layer: 5
-  m_Name: MoneyButtons (3)
+  m_Name: CustomButtons
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1400,7 +1400,7 @@ GameObject:
   - component: {fileID: 540705969}
   - component: {fileID: 540705968}
   m_Layer: 5
-  m_Name: MoneyImage
+  m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3013,7 +3013,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1356640707}
   m_Layer: 5
-  m_Name: MoneyButtons (4)
+  m_Name: InteriorButtons
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3590,7 +3590,7 @@ GameObject:
   - component: {fileID: 1635277446}
   - component: {fileID: 1635277445}
   m_Layer: 5
-  m_Name: MoneyImage
+  m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4223,7 +4223,7 @@ GameObject:
   - component: {fileID: 1936395977}
   - component: {fileID: 1936395976}
   m_Layer: 5
-  m_Name: MoneyImage
+  m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
