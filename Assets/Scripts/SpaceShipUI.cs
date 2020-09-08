@@ -27,25 +27,29 @@ public class SpaceShipUI : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             clickPositon = Input.mousePosition;
-            Debug.Log("left click");
+            // Debug.Log("left click");
         }
         if (Input.GetMouseButton(0))
         {
-            //Debug.Log("left pressing");
+            // Debug.Log("left pressing");
         }
         if (Input.GetMouseButtonUp(0))
         {
             upPosition = Input.mousePosition;
             deltaValue = (upPosition.y - clickPositon.y);
-            Debug.Log("delta value: " + (deltaValue));
+            // Debug.Log("delta value: " + (deltaValue));
 
             if (deltaValue > threshold)
             {
-                StartCoroutine(MoveCamera(storePos.position, "Store"));
+                if (storePos != null)
+                    StartCoroutine(MoveCamera(storePos.position, "Store"));
             }
             else if (deltaValue < -threshold)
             {
-                StartCoroutine(MoveCamera(endPos.position, "Space"));
+                if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Store")
+                    StartCoroutine(MoveCamera(endPos.position, "SpaceShip"));
+                else
+                    StartCoroutine(MoveCamera(endPos.position, "Space"));
             }
         }
     }
