@@ -6,6 +6,7 @@ public class Character : MonoBehaviour
 {
     private string nickName = null;
     private int level = 0;
+    private int exp = 0;
     private int amour = 0;
     private int hp = 100;
     private int darkSoul = 0;
@@ -31,6 +32,18 @@ public class Character : MonoBehaviour
         }
         set {
             this.nickName = value;
+        }
+    }
+
+    public int Exp
+    {
+        get
+        {
+            return this.exp;
+        }
+        set
+        {
+            this.exp = value;
         }
     }
 
