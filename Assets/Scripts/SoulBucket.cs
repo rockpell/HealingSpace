@@ -7,6 +7,7 @@ public class SoulBucket
     private int level = 0; // 0 ~ 20
     private int exp = 0;
     private int soulCount = 0; // 0 ~ 100
+    private int maxSoulCount = 100;
 
     public int Level
     {
@@ -45,8 +46,13 @@ public class SoulBucket
     }
 
     public bool StorageSoul(SoulType type)
-    { 
-        if (soulType == type)
+    {
+        if (soulType == SoulType.NONE)
+        {
+            soulType = type;
+            maxSoulCount = GameManager.Instance.GetSoul(type).MaxSoulCount;
+        }
+        if (soulType == type && soulCount < maxSoulCount)
         {
             this.soulCount += 1;
             return true;
@@ -65,4 +71,8 @@ public class SoulBucket
         }
         return false;
     }
+
+    // modifiy velocity && frequency of soul bucket with lev && exp
+
+    // visualize legi, soul, soul bucket
 }
