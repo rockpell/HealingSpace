@@ -1,13 +1,26 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class SoulBucket
+public class SoulCube
 {
     private SoulType soulType = SoulType.NONE;
-    private int level = 0; // 0 ~ 20
+    private int level = 1; // 1 ~ 20
     private int exp = 0;
     private int soulCount = 0; // 0 ~ 100
     private int maxSoulCount = 100;
+
+    private Soul darkSoul = null;
+    private Soul redSoul = null;
+    private Soul blueSoul = null;
+    private Soul whiteSoul = null;
+
+    public SoulCube()
+    {
+        darkSoul = new Soul(100, 100);
+        redSoul = new Soul(60, 0);
+        blueSoul = new Soul(30, 0);
+        whiteSoul = new Soul(10, 0);
+    }
 
     public int Level
     {
@@ -72,7 +85,32 @@ public class SoulBucket
         return false;
     }
 
-    // modifiy velocity && frequency of soul bucket with lev && exp
+    // modifiy speed && ratio of soul bucket with lev && exp
+
+    public void LevelUp()
+    {
+        // level up
+        // if level != 20 exp >= 100 : level++ && exp = 0;
+        DetermineFrequency();
+    }
+
+    public void DetermineFrequency()
+    {
+        if (level == 5)
+            redSoul.Frequency = 1;
+        else if (level == 10)
+            blueSoul.Frequency = 1;
+        else if (level == 15)
+            whiteSoul.Frequency = 1;
+
+        if (redSoul.Frequency != 0)
+            redSoul.Frequency += 1;
+        if (blueSoul.Frequency != 0)
+            blueSoul.Frequency += 1;
+        if (whiteSoul.Frequency != 0)
+            whiteSoul.Frequency += 1;
+        darkSoul.Frequency = 100 - redSoul.Frequency - blueSoul.Frequency - whiteSoul.Frequency;
+    }
 
     // visualize legi, soul, soul bucket
 }
