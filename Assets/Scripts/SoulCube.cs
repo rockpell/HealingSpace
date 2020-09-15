@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class SoulCube
 {
@@ -101,6 +102,54 @@ public class SoulCube
     }
 
     // modifiy speed && ratio of soul bucket with lev && exp
+    public void PickSoul(int level)
+    {
+        int randValue = Random.Range(0, 100);
+        int l = level - 1;
+
+        if (randValue <= ratioDarkSoul[l])
+        {
+            soulType = SoulType.DARK;
+        }
+        else if (level >= 5 && randValue <= ratioDarkSoul[l] + ratioRedSoul[l - 4])
+        {
+            soulType = SoulType.RED;
+        }
+        else if (level >= 10 && randValue <= ratioDarkSoul[l] + ratioRedSoul[l - 4] + ratioBlueSoul[l - 9])
+        {
+            soulType = SoulType.BLUE;
+        }
+        else if (level >= 15 && randValue <= ratioDarkSoul[l] + ratioRedSoul[l - 4] + ratioBlueSoul[l - 9] + ratioWhiteSoul[l - 14])
+        {
+            soulType = SoulType.WHITE;
+        }
+    }
+
+    public IEnumerator LoopCreateSoul()
+    {
+        float speed = GetSpeed(soulType, level);
+
+        while (soulCount < 100)
+        {
+            yield return new WaitForSeconds(speed);
+            soulCount += 1;
+            Debug.Log("ing...");
+        }
+    }
+
+    private float GetSpeed(SoulType soulType, int level)
+    {
+        if (soulType == SoulType.DARK)
+            return speedDarkSoul[level - 1];
+        if (soulType == SoulType.RED)
+            return speedRedSoul[level - 5];
+        if (soulType == SoulType.BLUE)
+            return speedBlueSoul[level - 10];
+        if (soulType == SoulType.WHITE)
+            return speedWhiteSoul[level - 15];
+        return -1;
+    }
+
 
     public bool isStoneComplete()
     {

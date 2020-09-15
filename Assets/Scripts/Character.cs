@@ -11,19 +11,26 @@ public class Character : MonoBehaviour
     private int hp = 100;
     private int darkSoul = 0;
     private int soulBuket = 1;
-    
+    private SoulCube soulCube = null;
     // need skill
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        soulCube = new SoulCube();
+        soulCube.PickSoul(1);// level
+        AutoPlay();
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    public void AutoPlay()
+    {
+        StartCoroutine(soulCube.LoopCreateSoul());
     }
 
     public string NickName {
