@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SoulCube
+public class SoulCube : MonoBehaviour
 {
     private SoulType soulType = SoulType.NONE;
     private int level = 1; // 1 ~ 20
@@ -31,7 +31,7 @@ public class SoulCube
 
     private Dictionary<SoulType, int> stoneCounter = null;
 
-    public SoulCube()
+    void Start()
     {
         darkSoul = new Soul(100, 100);
         redSoul = new Soul(60, 0);
@@ -102,7 +102,7 @@ public class SoulCube
     }
 
     // modifiy speed && ratio of soul bucket with lev && exp
-    public void PickSoul(int level)
+    public void PickSoul()
     {
         int randValue = Random.Range(0, 100);
         int l = level - 1;

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Character : MonoBehaviour
 {
+    [SerializeField] private GameObject originCube = null;
+    [SerializeField] private Transform[] positions = null;
     private string nickName = null;
     private int level = 0;
     private int exp = 0;
@@ -11,14 +13,20 @@ public class Character : MonoBehaviour
     private int hp = 100;
     private int darkSoul = 0;
     private int soulBuket = 1;
-    private SoulCube soulCube = null;
+    //private SoulCube soulCube = null;
+    private List<SoulCube> soulCubeList = null;
     // need skill
 
     // Start is called before the first frame update
     void Start()
     {
-        soulCube = new SoulCube();
-        soulCube.PickSoul(1);// level
+        soulCubeList = new List<SoulCube>();
+        createSoulCube();
+        createSoulCube();
+        foreach (SoulCube cube in soulCubeList)
+        {
+            cube.PickSoul();
+        }
         AutoPlay();
     }
 
@@ -28,9 +36,27 @@ public class Character : MonoBehaviour
         
     }
 
+    private void createSoulCube()
+    {
+        GameObject tempSoulCube = null;
+        int index = -1;
+        if (soulCubeList != null)
+        {
+            index = soulCubeList.Count;
+            tempSoulCube = Instantiate(originCube, positions[index].position, Quaternion.identity);
+            soulCubeList.Add(tempSoulCube.GetComponent<SoulCube>());
+        }
+    }
+
     public void AutoPlay()
     {
-        StartCoroutine(soulCube.LoopCreateSoul());
+        if (soulCubeList.Count > 0)
+        {
+            foreach (SoulCube cube in soulCubeList)
+            {
+                StartCoroutine(cube.LoopCreateSoul());
+            }
+        }
     }
 
     public string NickName {
