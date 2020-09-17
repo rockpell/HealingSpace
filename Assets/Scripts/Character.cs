@@ -23,6 +23,17 @@ public class Character : MonoBehaviour
         soulCubeList = new List<SoulCube>();
         createSoulCube();
         createSoulCube();
+        createSoulCube();
+        createSoulCube();
+        createSoulCube();
+        createSoulCube();
+        createSoulCube();
+        createSoulCube();
+        createSoulCube();
+        createSoulCube();
+        createSoulCube();
+        createSoulCube();
+
         foreach (SoulCube cube in soulCubeList)
         {
             cube.PickSoul();
@@ -40,12 +51,22 @@ public class Character : MonoBehaviour
     {
         GameObject tempSoulCube = null;
         int index = -1;
-        if (soulCubeList != null)
+        if (soulCubeList != null && soulCubeList.Count < 8)
         {
             index = soulCubeList.Count;
-            tempSoulCube = Instantiate(originCube, positions[index].position, Quaternion.identity);
+            tempSoulCube = Instantiate(originCube, GetPosition(index), Quaternion.identity); // make object by prefab
             soulCubeList.Add(tempSoulCube.GetComponent<SoulCube>());
         }
+    }
+    
+    private Vector3 GetPosition(int n)
+    {
+        Vector3 result = Vector3.zero;
+        int r = 3;
+        float pie = n * Mathf.PI / 4;
+        result = new Vector3(r * Mathf.Cos(pie), r * Mathf.Sin(pie), transform.position.z);
+        Debug.Log(result);
+        return result;
     }
 
     public void AutoPlay()
