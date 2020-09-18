@@ -5,7 +5,6 @@ using UnityEngine;
 public class Character : MonoBehaviour
 {
     [SerializeField] private GameObject originCube = null;
-    [SerializeField] private Transform[] positions = null;
     private string nickName = null;
     private int level = 0;
     private int exp = 0;
@@ -34,6 +33,7 @@ public class Character : MonoBehaviour
         createSoulCube();
         createSoulCube();
 
+
         foreach (SoulCube cube in soulCubeList)
         {
             cube.PickSoul();
@@ -44,7 +44,10 @@ public class Character : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetMouseButtonDown(0))
+        {
+            TouchEvent();
+        }
     }
 
     private void createSoulCube()
@@ -54,18 +57,19 @@ public class Character : MonoBehaviour
         if (soulCubeList != null && soulCubeList.Count < 8)
         {
             index = soulCubeList.Count;
-            tempSoulCube = Instantiate(originCube, GetPosition(index), Quaternion.identity); // make object by prefab
+            tempSoulCube = Instantiate(originCube, GetPosition(index), Quaternion.identity, this.transform); // make object by prefab
             soulCubeList.Add(tempSoulCube.GetComponent<SoulCube>());
+            tempSoulCube.SetActive(false);
         }
     }
     
     private Vector3 GetPosition(int n)
     {
         Vector3 result = Vector3.zero;
-        int r = 3;
+        Vector3 thisPos= transform.position;
+        float r = 1.5f;
         float pie = n * Mathf.PI / 4;
-        result = new Vector3(r * Mathf.Cos(pie), r * Mathf.Sin(pie), transform.position.z);
-        Debug.Log(result);
+        result = new Vector3(thisPos.x + r * Mathf.Cos(pie), thisPos.y + r * Mathf.Sin(pie), thisPos.z);
         return result;
     }
 
@@ -77,6 +81,40 @@ public class Character : MonoBehaviour
             {
                 StartCoroutine(cube.LoopCreateSoul());
             }
+        }
+    }
+
+    public void TouchEvent()
+    {
+        Vector2 touchPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        if (Physics2D.OverlapPoint(touchPos) == this.GetComponent<Collider2D>())
+        {
+            StartCoroutine(DisplaySoulCubes(soulCubeList));
+           
+
+            //for (int i = 0; i < soulCubeList.Count; i++)
+            //{
+            //    soulCubeList[].gameObject.SetActive(true);
+            //}
+
+            //foreach (SoulCube cube in soulCubeList)
+            //{
+            //    cube.gameObject.SetActive(true);
+            //}
+            //Debug.Log("Touch : " + Physics2D.OverlapPoint(touchPos).gameObject.name);
+        }
+
+    }
+
+    public IEnumerator DisplaySoulCubes(List<SoulCube> soulCubes)
+    {
+        foreach (SoulCube cube in soulCubes)
+        {
+            if (!(cube.gameObject.activeSelf))
+                cube.gameObject.SetActive(true);
+            else
+                cube.gameObject.SetActive(false);
+            yield return new WaitForSeconds(0.1f);
         }
     }
 
