@@ -7,7 +7,7 @@ public class SoulCube : MonoBehaviour
     private SoulType soulType = SoulType.NONE;
     private int level = 1; // 1 ~ 20
     private int soulCount = 0; // 0 ~ 100
-    private int maxSoulCount = 100;
+    private int maxSoulCount = 5;
 
     private Soul darkSoul = null;
     private Soul redSoul = null;
@@ -39,6 +39,11 @@ public class SoulCube : MonoBehaviour
         whiteSoul = new Soul(10, 0);
         stoneCounter = new Dictionary<SoulType, int>();
         initStoneCounter();
+    }
+
+    private void Update()
+    {
+        
     }
 
     public int Level
@@ -74,14 +79,14 @@ public class SoulCube : MonoBehaviour
         stoneCounter.Add(SoulType.WHITE, 0);
     }
 
-    public bool StorageSoul(SoulType type)
+    public bool StorageSoul()
     {
         if (soulType == SoulType.NONE)
         {
-            soulType = type;
-            maxSoulCount = GameManager.Instance.GetSoul(type).MaxSoulCount;
+            PickSoul();
+            maxSoulCount = GameManager.Instance.GetSoul(soulType).MaxSoulCount;
         }
-        if (soulType == type && soulCount < maxSoulCount)
+        else if (soulCount < maxSoulCount)
         {
             this.soulCount += 1;
             return true;
@@ -91,11 +96,12 @@ public class SoulCube : MonoBehaviour
 
     public bool RefineSoul()
     {
-        if (soulCount == 100)
+        if (soulCount == maxSoulCount)
         {
             soulCount = 0;
-            soulType = SoulType.NONE;
             stoneCounter[soulType] += 1;
+            Debug.Log("HAHA");
+            soulType = SoulType.NONE;
             return true;
         }
         return false;
@@ -125,14 +131,19 @@ public class SoulCube : MonoBehaviour
         }
     }
 
-    public IEnumerator LoopCreateSoul()
+    public void AutoPlay()
     {
-        float speed = GetSpeed(soulType, level);
+        StartCoroutine(LoopCreateSoul());
+    }
 
-        while (soulCount < 100)
+    private IEnumerator LoopCreateSoul()
+    {
+        float speed = GetSpeed(soulType, level)/6;
+
+        while (soulCount < maxSoulCount)
         {
             yield return new WaitForSeconds(speed);
-            soulCount += 1;
+            StorageSoul();
             Debug.Log("ing...");
         }
     }
@@ -192,5 +203,15 @@ public class SoulCube : MonoBehaviour
         darkSoul.Frequency = 100 - redSoul.Frequency - blueSoul.Frequency - whiteSoul.Frequency;
     }
 
+    public void ActiveCube(bool value)
+    {
+        GetComponent<SpriteRenderer>().enabled = value;
+        GetComponent<BoxCollider2D>().enabled = value;
+    }
+
+    public bool IsActiveCube()
+    {
+        return GetComponent<SpriteRenderer>().enabled && GetComponent<BoxCollider2D>().enabled;
+    }
     // visualize legi, soul, soul bucket
 }

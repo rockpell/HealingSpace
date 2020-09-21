@@ -59,7 +59,7 @@ public class Character : MonoBehaviour
             index = soulCubeList.Count;
             tempSoulCube = Instantiate(originCube, GetPosition(index), Quaternion.identity, this.transform); // make object by prefab
             soulCubeList.Add(tempSoulCube.GetComponent<SoulCube>());
-            tempSoulCube.SetActive(false);
+            tempSoulCube.GetComponent<SoulCube>().ActiveCube(false);
         }
     }
     
@@ -79,7 +79,8 @@ public class Character : MonoBehaviour
         {
             foreach (SoulCube cube in soulCubeList)
             {
-                StartCoroutine(cube.LoopCreateSoul());
+                cube.AutoPlay();
+                
             }
         }
     }
@@ -87,33 +88,31 @@ public class Character : MonoBehaviour
     public void TouchEvent()
     {
         Vector2 touchPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        if (Physics2D.OverlapPoint(touchPos) == this.GetComponent<Collider2D>())
+        Collider2D colider = Physics2D.OverlapPoint(touchPos);
+        if (colider)
         {
-            StartCoroutine(DisplaySoulCubes(soulCubeList));
-           
-
-            //for (int i = 0; i < soulCubeList.Count; i++)
-            //{
-            //    soulCubeList[].gameObject.SetActive(true);
-            //}
-
-            //foreach (SoulCube cube in soulCubeList)
-            //{
-            //    cube.gameObject.SetActive(true);
-            //}
-            //Debug.Log("Touch : " + Physics2D.OverlapPoint(touchPos).gameObject.name);
+            if (colider == this.GetComponent<Collider2D>())
+            {
+                StartCoroutine(DisplaySoulCubes(soulCubeList));
+            }
+            if (colider.gameObject.GetComponent<SoulCube>())
+            {
+                SoulCube cube = colider.gameObject.GetComponent<SoulCube>();
+                Debug.Log("this position: " + colider.transform.position);
+                cube.RefineSoul();
+                //cube.AutoPlay(); 추후 수정
+            }
         }
-
     }
 
     public IEnumerator DisplaySoulCubes(List<SoulCube> soulCubes)
     {
         foreach (SoulCube cube in soulCubes)
         {
-            if (!(cube.gameObject.activeSelf))
-                cube.gameObject.SetActive(true);
+            if (!(cube.IsActiveCube()))
+                cube.ActiveCube(true);
             else
-                cube.gameObject.SetActive(false);
+                cube.ActiveCube(false);
             yield return new WaitForSeconds(0.1f);
         }
     }
