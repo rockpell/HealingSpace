@@ -64,7 +64,7 @@ public class Character : MonoBehaviour
     {
         Vector3 result = Vector3.zero;
         Vector3 thisPos= transform.position;
-        float r = 1.5f;
+        float r = 1.0f;
         float pie = n * Mathf.PI / 4;
         result = new Vector3(thisPos.x + r * Mathf.Cos(pie), thisPos.y + r * Mathf.Sin(pie), thisPos.z);
         return result;

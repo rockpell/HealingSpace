@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class SoulCube : MonoBehaviour
 {
+    [SerializeField] private Sprite[] sprite = null;
     private SoulType soulType = SoulType.NONE;
     private int level = 1; // 1 ~ 20
     private int soulCount = 0; // 0 ~ 100
@@ -115,18 +116,22 @@ public class SoulCube : MonoBehaviour
         if (randValue <= ratioDarkSoul[l])
         {
             soulType = SoulType.DARK;
+            GetComponent<SpriteRenderer>().sprite = sprite[0];
         }
         else if (level >= 5 && randValue <= ratioDarkSoul[l] + ratioRedSoul[l - 4])
         {
             soulType = SoulType.RED;
+            GetComponent<SpriteRenderer>().sprite = sprite[1];
         }
         else if (level >= 10 && randValue <= ratioDarkSoul[l] + ratioRedSoul[l - 4] + ratioBlueSoul[l - 9])
         {
             soulType = SoulType.BLUE;
+            GetComponent<SpriteRenderer>().sprite = sprite[2];
         }
         else if (level >= 15 && randValue <= ratioDarkSoul[l] + ratioRedSoul[l - 4] + ratioBlueSoul[l - 9] + ratioWhiteSoul[l - 14])
         {
             soulType = SoulType.WHITE;
+            GetComponent<SpriteRenderer>().sprite = sprite[3];
         }
         maxSoulCount = GameManager.Instance.GetSoul(soulType).MaxSoulCount;
     }
