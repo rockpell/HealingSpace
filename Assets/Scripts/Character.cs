@@ -30,9 +30,6 @@ public class Character : MonoBehaviour
         createSoulCube();
         createSoulCube();
         createSoulCube();
-        createSoulCube();
-        createSoulCube();
-
 
         foreach (SoulCube cube in soulCubeList)
         {
@@ -91,18 +88,19 @@ public class Character : MonoBehaviour
         Collider2D colider = Physics2D.OverlapPoint(touchPos);
         if (colider)
         {
-            if (colider == this.GetComponent<Collider2D>())
+            if (colider == this.GetComponent<Collider2D>()) // when push the character, cubes appear.
             {
                 StartCoroutine(DisplaySoulCubes(soulCubeList));
             }
-            if (colider.gameObject.GetComponent<SoulCube>())
+            if (colider.gameObject.GetComponent<SoulCube>()) // when push the cube, get stone.
             {
                 SoulCube cube = colider.gameObject.GetComponent<SoulCube>();
-                Debug.Log("this position: " + colider.transform.position);
                 cube.RefineSoul();
-                //cube.AutoPlay(); 추후 수정
+                cube.PickSoul();
+                cube.AutoPlay();
             }
         }
+
     }
 
     public IEnumerator DisplaySoulCubes(List<SoulCube> soulCubes)

@@ -14,6 +14,8 @@ public class SoulCube : MonoBehaviour
     private Soul blueSoul = null;
     private Soul whiteSoul = null;
 
+    private bool isAuto = false;
+
     private static int[] needDarkStone = { 1, 5, 10, 15, 20, 30, 40, 50, 60, 90, 120, 150, 180, 210, 250, 300, 350, 400, 500};
     private static int[] needRedStone = { 5, 10, 15, 20, 25, 30, 40, 50, 60, 70, 80, 100, 120, 150, 200 };
     private static int[] needBlueStone = { 3, 6, 9, 12, 15, 30, 45, 60, 90, 150 };
@@ -81,12 +83,7 @@ public class SoulCube : MonoBehaviour
 
     public bool StorageSoul()
     {
-        if (soulType == SoulType.NONE)
-        {
-            PickSoul();
-            maxSoulCount = GameManager.Instance.GetSoul(soulType).MaxSoulCount;
-        }
-        else if (soulCount < maxSoulCount)
+        if (soulCount < maxSoulCount)
         {
             this.soulCount += 1;
             return true;
@@ -102,6 +99,8 @@ public class SoulCube : MonoBehaviour
             stoneCounter[soulType] += 1;
             Debug.Log("HAHA");
             soulType = SoulType.NONE;
+            isAuto = false;
+            LevelUp();
             return true;
         }
         return false;
@@ -129,22 +128,26 @@ public class SoulCube : MonoBehaviour
         {
             soulType = SoulType.WHITE;
         }
+        maxSoulCount = GameManager.Instance.GetSoul(soulType).MaxSoulCount;
     }
 
     public void AutoPlay()
     {
-        StartCoroutine(LoopCreateSoul());
+        if (!isAuto)
+        {
+            isAuto = true;
+            StartCoroutine(LoopCreateSoul());
+        }
     }
 
     private IEnumerator LoopCreateSoul()
     {
-        float speed = GetSpeed(soulType, level)/6;
+        float speed = GetSpeed(soulType, level);
 
         while (soulCount < maxSoulCount)
         {
             yield return new WaitForSeconds(speed);
             StorageSoul();
-            Debug.Log("ing...");
         }
     }
 
