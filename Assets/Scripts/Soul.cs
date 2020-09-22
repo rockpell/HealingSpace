@@ -3,13 +3,11 @@ public class Soul
 {
     private int maxSoulCount = 100;
     private int frequency = 100;
-    private int price = 100;
 
-    public Soul(int maxSoulCount, int frequency, int price)
+    public Soul(int maxSoulCount, int frequency)
     {
         this.maxSoulCount = maxSoulCount;
         this.frequency = frequency;
-        this.price = price;
     }
 
     public int MaxSoulCount
@@ -20,10 +18,6 @@ public class Soul
     public int Frequency
     {
         get { return frequency; }
-    }
-
-    public int Price
-    {
-        get { return price; }
+        set { this.frequency = value; }
     }
 }

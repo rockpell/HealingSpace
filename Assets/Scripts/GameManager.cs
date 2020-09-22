@@ -29,10 +29,10 @@ public class GameManager : MonoBehaviour
         }
         DontDestroyOnLoad(gameObject);
 
-        darkSoul = new Soul(100, 100, 100);
-        redSoul = new Soul(50, 20, 500);
-        blueSoul = new Soul(25, 5, 1000);
-        whiteSoul = new Soul(5, 1, 5000);
+        darkSoul = new Soul(100, 100);
+        redSoul = new Soul(60, 20);
+        blueSoul = new Soul(30, 5);
+        whiteSoul = new Soul(10, 1);
     }
 
     void Start()
