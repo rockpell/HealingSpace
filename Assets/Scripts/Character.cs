@@ -12,7 +12,8 @@ public class Character : MonoBehaviour
     private int hp = 100;
     private int darkSoul = 0;
     private int soulBuket = 1;
-    private bool isArrival = true;
+    private bool isClick = false;
+    private bool isDrag = false;
 
     private Vector3 targetPos = Vector3.zero;
     private Vector3 direction = Vector3.zero;
@@ -20,6 +21,8 @@ public class Character : MonoBehaviour
     private float velocity = 0;
     private float default_velocity = 0.1f;
     private float accelaration = 0.1f;
+    private float accTime = 0;
+    private float clickAccTime = 0;
 
     private List<SoulCube> soulCubeList = null;
     // need skill
@@ -44,31 +47,28 @@ public class Character : MonoBehaviour
             cube.PickSoul();
         }
         AutoPlay();
-
-        default_direction.x = Random.Range(-1f, 1f);
-        default_direction.y = Random.Range(-1f, 1f);
-        default_direction.z = transform.position.z;
+        RandomDirection();
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        TouchEvent();
+        if (!isClick)
         {
-            TouchEvent();
-            if (isArrival)
+            if (isDrag)
+                DragToMove();
+            else
             {
-                targetPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                targetPos.z = transform.position.z;
-                isArrival = false;
+                AutoMove();
             }
         }
-        float distance = Vector3.Distance(targetPos, this.transform.position);
-        if (distance < 1.5f)
-            isArrival = true;
+        if (Input.GetMouseButtonUp(0))
+        {
+            isDrag = false;
 
-        if (!isArrival)
-            MoveToTarget();
+        }
     }
 
     private void createSoulCube()
@@ -110,21 +110,34 @@ public class Character : MonoBehaviour
     {
         Vector2 touchPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Collider2D colider = Physics2D.OverlapPoint(touchPos);
+
         if (colider)
         {
-            if (colider == this.GetComponent<Collider2D>()) // when push the character, cubes appear.
+            if (Input.GetMouseButtonUp(0))
             {
-                StartCoroutine(DisplaySoulCubes(soulCubeList));
+                if (colider.gameObject.GetComponent<Character>() && clickAccTime < 0.25f) // when push the character, cubes appear.
+                {// it's better to use distance than time!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    StartCoroutine(DisplaySoulCubes(soulCubeList));
+                    isClick = !isClick;
+                }
+                if (colider.gameObject.GetComponent<SoulCube>()) // when push the cube, get stone.
+                {
+                    SoulCube cube = colider.gameObject.GetComponent<SoulCube>();
+                    cube.RefineSoul();
+                    cube.PickSoul();
+                    cube.AutoPlay();
+                }
+                clickAccTime = 0;
             }
-            if (colider.gameObject.GetComponent<SoulCube>()) // when push the cube, get stone.
+            if (Input.GetMouseButton(0))
             {
-                SoulCube cube = colider.gameObject.GetComponent<SoulCube>();
-                cube.RefineSoul();
-                cube.PickSoul();
-                cube.AutoPlay();
+                if (colider.gameObject.GetComponent<Character>())
+                {                    
+                    isDrag = true;
+                    clickAccTime += Time.deltaTime;
+                }
             }
         }
-
     }
 
     public IEnumerator DisplaySoulCubes(List<SoulCube> soulCubes)
@@ -208,17 +221,29 @@ public class Character : MonoBehaviour
 
     public void DragToMove()
     {
+        targetPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        targetPos.z = transform.position.z;
+        transform.position = targetPos;
     }
 
-    public void MoveToTarget()
+    public void AutoMove()
     {
-        // Player의 위치와 이 객체의 위치를 빼고 단위 벡터화 한다.
-        direction = (targetPos - transform.position).normalized;
-        // 초가 아닌 한 프레임으로 가속도 계산하여 속도 증가
-        velocity = (velocity + accelaration * Time.deltaTime);
-        // 해당 방향으로 무빙
-        this.transform.position = new Vector3(transform.position.x + (direction.x * velocity),
-                                               transform.position.y + (direction.y * velocity),
-                                                  transform.position.z);
+        accTime += Time.deltaTime;
+        if (accTime > 5.0f)
+        {
+            RandomDirection();
+            accTime -= 5.0f;
+        }
+        transform.position += default_direction * Time.deltaTime;
+    }
+
+    private void RandomDirection()
+    {
+        default_direction.x = Random.Range(-1f, 1f);
+        default_direction.y = Random.Range(-1f, 1f);
     }
 }
+
+
+// 1. drag to move;
+// 2. auto moving;
