@@ -14,6 +14,8 @@ public class Character : MonoBehaviour
     private int soulBuket = 1;
     private bool isClick = false;
     private bool isDrag = false;
+    private bool isCharacter = false;
+    private float speed = 0.1f; // !!!!!!!!!!!!!!!!we should add rigidbody!!!!!!!!!!!!
 
     private Vector3 targetPos = Vector3.zero;
     private Vector3 direction = Vector3.zero;
@@ -22,7 +24,9 @@ public class Character : MonoBehaviour
     private float default_velocity = 0.1f;
     private float accelaration = 0.1f;
     private float accTime = 0;
-    private float clickAccTime = 0;
+    private float distance = 0;
+    // private float clickAccTime = 0;
+    private Vector3 clickPoint = Vector3.zero;
 
     private List<SoulCube> soulCubeList = null;
     // need skill
@@ -67,7 +71,7 @@ public class Character : MonoBehaviour
         if (Input.GetMouseButtonUp(0))
         {
             isDrag = false;
-
+            isCharacter = false;
         }
     }
 
@@ -101,7 +105,6 @@ public class Character : MonoBehaviour
             foreach (SoulCube cube in soulCubeList)
             {
                 cube.AutoPlay();
-                
             }
         }
     }
@@ -111,12 +114,14 @@ public class Character : MonoBehaviour
         Vector2 touchPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Collider2D colider = Physics2D.OverlapPoint(touchPos);
 
+
         if (colider)
         {
             if (Input.GetMouseButtonUp(0))
             {
-                if (colider.gameObject.GetComponent<Character>() && clickAccTime < 0.25f) // when push the character, cubes appear.
-                {// it's better to use distance than time!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                if (colider.gameObject.GetComponent<Character>() &&
+                    Vector3.Distance(clickPoint, Input.mousePosition) < 0.25f) // when push the character, cubes appear.
+                {
                     StartCoroutine(DisplaySoulCubes(soulCubeList));
                     isClick = !isClick;
                 }
@@ -127,14 +132,21 @@ public class Character : MonoBehaviour
                     cube.PickSoul();
                     cube.AutoPlay();
                 }
-                clickAccTime = 0;
             }
             if (Input.GetMouseButton(0))
             {
-                if (colider.gameObject.GetComponent<Character>())
+                if (isCharacter && colider.gameObject.GetComponent<Character>())
                 {                    
                     isDrag = true;
-                    clickAccTime += Time.deltaTime;
+                    //distance 
+                }
+            }
+            if (Input.GetMouseButtonDown(0))
+            {
+                if (colider.gameObject.GetComponent<Character>())
+                {
+                    clickPoint = Input.mousePosition;
+                    isCharacter = true;
                 }
             }
         }
@@ -234,7 +246,7 @@ public class Character : MonoBehaviour
             RandomDirection();
             accTime -= 5.0f;
         }
-        transform.position += default_direction * Time.deltaTime;
+        transform.position += default_direction * Time.deltaTime * speed;
     }
 
     private void RandomDirection()
@@ -242,8 +254,7 @@ public class Character : MonoBehaviour
         default_direction.x = Random.Range(-1f, 1f);
         default_direction.y = Random.Range(-1f, 1f);
     }
+
 }
 
 
-// 1. drag to move;
-// 2. auto moving;
