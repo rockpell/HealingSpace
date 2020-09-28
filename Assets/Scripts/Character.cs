@@ -5,6 +5,7 @@ using UnityEngine;
 public class Character : MonoBehaviour
 {
     [SerializeField] private GameObject originCube = null;
+    [SerializeField] private ControllerManager controllerManager = null;
     private string nickName = null;
     private int level = 0;
     private int exp = 0;
@@ -71,7 +72,7 @@ public class Character : MonoBehaviour
         if (Input.GetMouseButtonUp(0))
         {
             isDrag = false;
-            isCharacter = false;
+            IsCharacter = false;
         }
     }
 
@@ -114,7 +115,6 @@ public class Character : MonoBehaviour
         Vector2 touchPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Collider2D colider = Physics2D.OverlapPoint(touchPos);
 
-
         if (colider)
         {
             if (Input.GetMouseButtonUp(0))
@@ -135,7 +135,7 @@ public class Character : MonoBehaviour
             }
             if (Input.GetMouseButton(0))
             {
-                if (isCharacter && colider.gameObject.GetComponent<Character>())
+                if (IsCharacter && colider.gameObject.GetComponent<Character>())
                 {                    
                     isDrag = true;
                     //distance 
@@ -146,7 +146,7 @@ public class Character : MonoBehaviour
                 if (colider.gameObject.GetComponent<Character>())
                 {
                     clickPoint = Input.mousePosition;
-                    isCharacter = true;
+                    IsCharacter = true;
                 }
             }
         }
@@ -233,7 +233,12 @@ public class Character : MonoBehaviour
 
     public void DragToMove()
     {
-        targetPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        float edgeSize = 30f;
+        Vector3 mousePos = Input.mousePosition;
+
+        mousePos.x = Mathf.Clamp(mousePos.x, edgeSize, Screen.width - edgeSize);
+        mousePos.y = Mathf.Clamp(mousePos.y, edgeSize, Screen.height - edgeSize);
+        targetPos = Camera.main.ScreenToWorldPoint(mousePos);
         targetPos.z = transform.position.z;
         transform.position = targetPos;
     }
@@ -255,6 +260,15 @@ public class Character : MonoBehaviour
         default_direction.y = Random.Range(-1f, 1f);
     }
 
+    public bool IsCharacter
+    {
+        get { return isCharacter; }
+        set
+        {
+            isCharacter = value;
+            controllerManager.SetIsCharacter(value);
+        }
+    }
 }
 
 
