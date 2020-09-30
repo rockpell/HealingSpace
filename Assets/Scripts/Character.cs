@@ -6,6 +6,11 @@ public class Character : MonoBehaviour
 {
     [SerializeField] private GameObject originCube = null;
     [SerializeField] private ControllerManager controllerManager = null;
+    [SerializeField] private float maxCharacterX = 0;
+    [SerializeField] private float minCharacterX = 0;
+    [SerializeField] private float maxCharacterY = 0;
+    [SerializeField] private float minCharacterY = 0;
+
     private string nickName = null;
     private int level = 0;
     private int exp = 0;
@@ -17,6 +22,7 @@ public class Character : MonoBehaviour
     private bool isDrag = false;
     private bool isCharacter = false;
     private float speed = 0.1f; // !!!!!!!!!!!!!!!!we should add rigidbody!!!!!!!!!!!!
+
 
     private Vector3 targetPos = Vector3.zero;
     private Vector3 direction = Vector3.zero;
@@ -245,13 +251,18 @@ public class Character : MonoBehaviour
 
     public void AutoMove()
     {
+        Vector3 nowPos = transform.position;
+
         accTime += Time.deltaTime;
         if (accTime > 5.0f)
         {
             RandomDirection();
             accTime -= 5.0f;
         }
-        transform.position += default_direction * Time.deltaTime * speed;
+        nowPos += default_direction * Time.deltaTime * speed;
+        nowPos.x = Mathf.Clamp(nowPos.x, minCharacterX, maxCharacterX);
+        nowPos.y = Mathf.Clamp(nowPos.y, minCharacterY, maxCharacterY);
+        transform.position = nowPos;
     }
 
     private void RandomDirection()
