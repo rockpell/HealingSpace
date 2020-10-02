@@ -5,6 +5,12 @@ using UnityEngine;
 public class Character : MonoBehaviour
 {
     [SerializeField] private GameObject originCube = null;
+    [SerializeField] private ControllerManager controllerManager = null;
+    [SerializeField] private float maxCharacterX = 0;
+    [SerializeField] private float minCharacterX = 0;
+    [SerializeField] private float maxCharacterY = 0;
+    [SerializeField] private float minCharacterY = 0;
+
     private string nickName = null;
     private int level = 0;
     private int exp = 0;
@@ -12,7 +18,23 @@ public class Character : MonoBehaviour
     private int hp = 100;
     private int darkSoul = 0;
     private int soulBuket = 1;
-    //private SoulCube soulCube = null;
+    private bool isClick = false;
+    private bool isDrag = false;
+    private bool isCharacter = false;
+    private float speed = 0.1f; // !!!!!!!!!!!!!!!!we should add rigidbody!!!!!!!!!!!!
+
+
+    private Vector3 targetPos = Vector3.zero;
+    private Vector3 direction = Vector3.zero;
+    private Vector3 default_direction = Vector3.zero;
+    private float velocity = 0;
+    private float default_velocity = 0.1f;
+    private float accelaration = 0.1f;
+    private float accTime = 0;
+    private float distance = 0;
+    // private float clickAccTime = 0;
+    private Vector3 clickPoint = Vector3.zero;
+
     private List<SoulCube> soulCubeList = null;
     // need skill
 
@@ -36,14 +58,27 @@ public class Character : MonoBehaviour
             cube.PickSoul();
         }
         AutoPlay();
+        RandomDirection();
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        TouchEvent();
+        if (!isClick)
         {
-            TouchEvent();
+            if (isDrag)
+                DragToMove();
+            else
+            {
+                AutoMove();
+            }
+        }
+        if (Input.GetMouseButtonUp(0))
+        {
+            isDrag = false;
+            IsCharacter = false;
         }
     }
 
@@ -77,7 +112,6 @@ public class Character : MonoBehaviour
             foreach (SoulCube cube in soulCubeList)
             {
                 cube.AutoPlay();
-                
             }
         }
     }
@@ -86,21 +120,42 @@ public class Character : MonoBehaviour
     {
         Vector2 touchPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Collider2D colider = Physics2D.OverlapPoint(touchPos);
+
         if (colider)
         {
-            if (colider == this.GetComponent<Collider2D>()) // when push the character, cubes appear.
+            if (Input.GetMouseButtonUp(0))
             {
-                StartCoroutine(DisplaySoulCubes(soulCubeList));
+                if (colider.gameObject.GetComponent<Character>() &&
+                    Vector3.Distance(clickPoint, Input.mousePosition) < 0.25f) // when push the character, cubes appear.
+                {
+                    StartCoroutine(DisplaySoulCubes(soulCubeList));
+                    isClick = !isClick;
+                }
+                if (colider.gameObject.GetComponent<SoulCube>()) // when push the cube, get stone.
+                {
+                    SoulCube cube = colider.gameObject.GetComponent<SoulCube>();
+                    cube.RefineSoul();
+                    cube.PickSoul();
+                    cube.AutoPlay();
+                }
             }
-            if (colider.gameObject.GetComponent<SoulCube>()) // when push the cube, get stone.
+            if (Input.GetMouseButton(0))
             {
-                SoulCube cube = colider.gameObject.GetComponent<SoulCube>();
-                cube.RefineSoul();
-                cube.PickSoul();
-                cube.AutoPlay();
+                if (IsCharacter && colider.gameObject.GetComponent<Character>())
+                {                    
+                    isDrag = true;
+                    //distance 
+                }
+            }
+            if (Input.GetMouseButtonDown(0))
+            {
+                if (colider.gameObject.GetComponent<Character>())
+                {
+                    clickPoint = Input.mousePosition;
+                    IsCharacter = true;
+                }
             }
         }
-
     }
 
     public IEnumerator DisplaySoulCubes(List<SoulCube> soulCubes)
@@ -181,4 +236,50 @@ public class Character : MonoBehaviour
             this.soulBuket = value;
         }
     }
+
+    public void DragToMove()
+    {
+        float edgeSize = 30f;
+        Vector3 mousePos = Input.mousePosition;
+
+        mousePos.x = Mathf.Clamp(mousePos.x, edgeSize, Screen.width - edgeSize);
+        mousePos.y = Mathf.Clamp(mousePos.y, edgeSize, Screen.height - edgeSize);
+        targetPos = Camera.main.ScreenToWorldPoint(mousePos);
+        targetPos.z = transform.position.z;
+        transform.position = targetPos;
+    }
+
+    public void AutoMove()
+    {
+        Vector3 nowPos = transform.position;
+
+        accTime += Time.deltaTime;
+        if (accTime > 5.0f)
+        {
+            RandomDirection();
+            accTime -= 5.0f;
+        }
+        nowPos += default_direction * Time.deltaTime * speed;
+        nowPos.x = Mathf.Clamp(nowPos.x, minCharacterX, maxCharacterX);
+        nowPos.y = Mathf.Clamp(nowPos.y, minCharacterY, maxCharacterY);
+        transform.position = nowPos;
+    }
+
+    private void RandomDirection()
+    {
+        default_direction.x = Random.Range(-1f, 1f);
+        default_direction.y = Random.Range(-1f, 1f);
+    }
+
+    public bool IsCharacter
+    {
+        get { return isCharacter; }
+        set
+        {
+            isCharacter = value;
+            controllerManager.SetIsCharacter(value);
+        }
+    }
 }
+
+
