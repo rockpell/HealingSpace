@@ -20,7 +20,7 @@ public class Character : MonoBehaviour
     private int soulBuket = 1;
     private bool isClick = false;
     private bool isDrag = false;
-    private bool isCharacter = false;
+    //private bool isCharacter = false;
     private float speed = 0.1f; // !!!!!!!!!!!!!!!!we should add rigidbody!!!!!!!!!!!!
 
 
@@ -59,13 +59,12 @@ public class Character : MonoBehaviour
         }
         AutoPlay();
         RandomDirection();
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        TouchEvent();
         if (!isClick)
         {
             if (isDrag)
@@ -74,11 +73,6 @@ public class Character : MonoBehaviour
             {
                 AutoMove();
             }
-        }
-        if (Input.GetMouseButtonUp(0))
-        {
-            isDrag = false;
-            IsCharacter = false;
         }
     }
 
@@ -94,11 +88,11 @@ public class Character : MonoBehaviour
             tempSoulCube.GetComponent<SoulCube>().ActiveCube(false);
         }
     }
-    
+
     private Vector3 GetPosition(int n)
     {
         Vector3 result = Vector3.zero;
-        Vector3 thisPos= transform.position;
+        Vector3 thisPos = transform.position;
         float r = 1.0f;
         float pie = n * Mathf.PI / 4;
         result = new Vector3(thisPos.x + r * Mathf.Cos(pie), thisPos.y + r * Mathf.Sin(pie), thisPos.z);
@@ -116,49 +110,12 @@ public class Character : MonoBehaviour
         }
     }
 
-    public void TouchEvent()
+    public void DisplaySoulCubes()
     {
-        Vector2 touchPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Collider2D colider = Physics2D.OverlapPoint(touchPos);
-
-        if (colider)
-        {
-            if (Input.GetMouseButtonUp(0))
-            {
-                if (colider.gameObject.GetComponent<Character>() &&
-                    Vector3.Distance(clickPoint, Input.mousePosition) < 0.25f) // when push the character, cubes appear.
-                {
-                    StartCoroutine(DisplaySoulCubes(soulCubeList));
-                    isClick = !isClick;
-                }
-                if (colider.gameObject.GetComponent<SoulCube>()) // when push the cube, get stone.
-                {
-                    SoulCube cube = colider.gameObject.GetComponent<SoulCube>();
-                    cube.RefineSoul();
-                    cube.PickSoul();
-                    cube.AutoPlay();
-                }
-            }
-            if (Input.GetMouseButton(0))
-            {
-                if (IsCharacter && colider.gameObject.GetComponent<Character>())
-                {                    
-                    isDrag = true;
-                    //distance 
-                }
-            }
-            if (Input.GetMouseButtonDown(0))
-            {
-                if (colider.gameObject.GetComponent<Character>())
-                {
-                    clickPoint = Input.mousePosition;
-                    IsCharacter = true;
-                }
-            }
-        }
+        StartCoroutine(DisplaySoulCubes(soulCubeList));
     }
 
-    public IEnumerator DisplaySoulCubes(List<SoulCube> soulCubes)
+    private IEnumerator DisplaySoulCubes(List<SoulCube> soulCubes)
     {
         foreach (SoulCube cube in soulCubes)
         {
@@ -170,11 +127,14 @@ public class Character : MonoBehaviour
         }
     }
 
-    public string NickName {
-        get {
+    public string NickName
+    {
+        get
+        {
             return this.nickName;
         }
-        set {
+        set
+        {
             this.nickName = value;
         }
     }
@@ -191,48 +151,63 @@ public class Character : MonoBehaviour
         }
     }
 
-    public int Level {
-        get {
+    public int Level
+    {
+        get
+        {
             return this.level;
         }
-        set {
+        set
+        {
             this.level = value;
         }
     }
 
-    public int Amour {
-        get {
+    public int Amour
+    {
+        get
+        {
             return this.amour;
         }
 
-        set {
+        set
+        {
             this.amour = value;
         }
     }
 
-    public int Hp {
-        get {
+    public int Hp
+    {
+        get
+        {
             return this.hp;
         }
-        set {
+        set
+        {
             this.hp = value;
         }
     }
 
-    public int DarkSoul {
-        get {
+    public int DarkSoul
+    {
+        get
+        {
             return this.darkSoul;
         }
-        set {
+        set
+        {
             this.darkSoul = value;
         }
     }
 
-    public int SoulBuket {
-        get {
+    public int SoulBuket
+    {
+        get
+        {
             return this.soulBuket;
         }
-        set {
+        set
+        {
             this.soulBuket = value;
         }
     }
@@ -271,14 +246,16 @@ public class Character : MonoBehaviour
         default_direction.y = Random.Range(-1f, 1f);
     }
 
-    public bool IsCharacter
+    public bool IsDrag
     {
-        get { return isCharacter; }
-        set
-        {
-            isCharacter = value;
-            controllerManager.SetIsCharacter(value);
-        }
+        get { return isDrag; }
+        set { isDrag = value; }
+    }
+
+    public bool IsClick
+    {
+        get { return isClick; }
+        set { isClick = value; }
     }
 }
 

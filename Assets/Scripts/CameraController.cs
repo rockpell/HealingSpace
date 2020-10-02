@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
+    [SerializeField] private ControllerManager controllerManager = null;
     [SerializeField] private float maxCameraX = 0;
     [SerializeField] private float minCameraX = 0;
     [SerializeField] private float maxCameraY = 0;
@@ -14,7 +15,6 @@ public class CameraController : MonoBehaviour
     private Vector3 startPos = Vector3.zero;
     private float speed = 100f;
     private float scrollSpeed = 10f;
-    private bool isCharacter = false;
 
 
     // Start is called before the first frame update
@@ -29,7 +29,7 @@ public class CameraController : MonoBehaviour
         Vector2 touchPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Collider2D colider = Physics2D.OverlapPoint(touchPos);
 
-        if (!isCharacter)
+        if (!controllerManager.NowCharacter)
         {
             if (colider && colider.gameObject.name == "BG")
             {
@@ -86,8 +86,4 @@ public class CameraController : MonoBehaviour
         Camera.main.transform.position = vector;
     }
 
-    public bool IsCharacter {
-        get { return isCharacter; }
-        set { isCharacter = value; }
-    }
 }
