@@ -5,6 +5,7 @@ using UnityEngine;
 public class ControllerManager : MonoBehaviour
 {
     [SerializeField] CameraController cameraController = null;
+    [SerializeField] UIManager uiManager = null;
     private Character nowCharacter = null; // present selected character instance
     private Vector3 clickPoint = Vector3.zero;
 
@@ -41,8 +42,10 @@ public class ControllerManager : MonoBehaviour
                 if (colider.gameObject.GetComponent<Character>() &&
                     Vector3.Distance(clickPoint, Input.mousePosition) < 0.25f) // when push the character, cubes appear.
                 {
-                    nowCharacter.DisplaySoulCubes();
+                    nowCharacter.DisplaySoulCubes(!nowCharacter.IsClick);
+                    uiManager.ToggleStatusBar(!nowCharacter.IsClick);
                     nowCharacter.IsClick = !nowCharacter.IsClick;
+                    uiManager.RefreshStatusBar(nowCharacter);
                 }
                 if (colider.gameObject.GetComponent<SoulCube>()) // when push the cube, get stone.
                 {

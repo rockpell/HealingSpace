@@ -14,8 +14,8 @@ public class Character : MonoBehaviour
     private string nickName = null;
     private int level = 0;
     private int exp = 0;
-    private int amour = 0;
-    private int hp = 100;
+    private float amour = 0;
+    private float hp = 100;
     private int darkSoul = 0;
     private int soulBuket = 1;
     private bool isClick = false;
@@ -110,19 +110,19 @@ public class Character : MonoBehaviour
         }
     }
 
-    public void DisplaySoulCubes()
+    public void DisplaySoulCubes(bool value)
     {
-        StartCoroutine(DisplaySoulCubes(soulCubeList));
+        StartCoroutine(DisplaySoulCubes(soulCubeList, value));
     }
 
-    private IEnumerator DisplaySoulCubes(List<SoulCube> soulCubes)
+    private IEnumerator DisplaySoulCubes(List<SoulCube> soulCubes, bool value)
     {
         foreach (SoulCube cube in soulCubes)
         {
-            if (!(cube.IsActiveCube()))
-                cube.ActiveCube(true);
-            else
-                cube.ActiveCube(false);
+            //if (!(cube.IsActiveCube()))
+            //    cube.ActiveCube(true);
+            //else
+                cube.ActiveCube(value);
             yield return new WaitForSeconds(0.1f);
         }
     }
@@ -163,7 +163,7 @@ public class Character : MonoBehaviour
         }
     }
 
-    public int Amour
+    public float Amour
     {
         get
         {
@@ -176,7 +176,7 @@ public class Character : MonoBehaviour
         }
     }
 
-    public int Hp
+    public float Hp
     {
         get
         {
