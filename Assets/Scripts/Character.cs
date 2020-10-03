@@ -19,7 +19,7 @@ public class Character : MonoBehaviour
     private int darkSoul = 0;
     private int soulBuket = 1;
     private bool isClick = false;
-    private bool isDrag = false;
+    public bool isDrag = false;
     //private bool isCharacter = false;
     private float speed = 0.1f; // !!!!!!!!!!!!!!!!we should add rigidbody!!!!!!!!!!!!
 
@@ -119,10 +119,7 @@ public class Character : MonoBehaviour
     {
         foreach (SoulCube cube in soulCubes)
         {
-            //if (!(cube.IsActiveCube()))
-            //    cube.ActiveCube(true);
-            //else
-                cube.ActiveCube(value);
+            cube.ActiveCube(value);
             yield return new WaitForSeconds(0.1f);
         }
     }

@@ -36,7 +36,7 @@ public class CameraController : MonoBehaviour
                 DragCamera();
             }
         }
-        else
+        else if (controllerManager.NowCharacter.IsDrag)
         {
             ScrollMoving();
         }
