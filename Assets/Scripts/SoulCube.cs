@@ -32,7 +32,7 @@ public class SoulCube : MonoBehaviour
     private static float[] ratioBlueSoul = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10 };
     private static float[] ratioWhiteSoul = { 1, 2, 3, 4, 5, 5 };
 
-    private Dictionary<SoulType, int> stoneCounter = null;
+    private Dictionary<SoulType, int> levUpStoneCounter = null;
 
     void Start()
     {
@@ -40,8 +40,8 @@ public class SoulCube : MonoBehaviour
         redSoul = new Soul(60, 0);
         blueSoul = new Soul(30, 0);
         whiteSoul = new Soul(10, 0);
-        stoneCounter = new Dictionary<SoulType, int>();
-        initStoneCounter();
+        levUpStoneCounter = new Dictionary<SoulType, int>();
+        InitLevUpStoneCounter();
     }
 
     private void Update()
@@ -73,13 +73,13 @@ public class SoulCube : MonoBehaviour
         }
     }
 
-    private void initStoneCounter()
+    private void InitLevUpStoneCounter()
     {
-        stoneCounter.Clear();
-        stoneCounter.Add(SoulType.DARK, 0);
-        stoneCounter.Add(SoulType.RED, 0);
-        stoneCounter.Add(SoulType.BLUE, 0);
-        stoneCounter.Add(SoulType.WHITE, 0);
+        levUpStoneCounter.Clear();
+        levUpStoneCounter.Add(SoulType.DARK, 0);
+        levUpStoneCounter.Add(SoulType.RED, 0);
+        levUpStoneCounter.Add(SoulType.BLUE, 0);
+        levUpStoneCounter.Add(SoulType.WHITE, 0);
     }
 
     public bool StorageSoul()
@@ -94,11 +94,11 @@ public class SoulCube : MonoBehaviour
 
     public bool RefineSoul()
     {
-        if (soulCount == maxSoulCount)
+        if (soulCount >= maxSoulCount)
         {
             soulCount = 0;
-            stoneCounter[soulType] += 1;
-            Debug.Log("HAHA");
+            levUpStoneCounter[soulType] += 1;
+            GameManager.Instance.StoneCounter[soulType] += 1;
             soulType = SoulType.NONE;
             isAuto = false;
             LevelUp();
@@ -147,7 +147,7 @@ public class SoulCube : MonoBehaviour
 
     private IEnumerator LoopCreateSoul()
     {
-        float speed = GetSpeed(soulType, level);
+        float speed = GetSpeed(soulType, level) / 600f;
 
         while (soulCount < maxSoulCount)
         {
@@ -170,25 +170,26 @@ public class SoulCube : MonoBehaviour
     }
 
 
-    public bool isStoneComplete()
+    public bool IsStoneComplete()
     {
-        if (needDarkStone[level - 1] != stoneCounter[SoulType.DARK])
+        if (needDarkStone[level - 1] != levUpStoneCounter[SoulType.DARK])
             return false;
-        if (level >= 5 && needRedStone[level - 5] != stoneCounter[SoulType.RED])
+        if (level >= 5 && needRedStone[level - 5] != levUpStoneCounter[SoulType.RED])
             return false;
-        if (level >= 10 && needBlueStone[level - 10] != stoneCounter[SoulType.BLUE])
+        if (level >= 10 && needBlueStone[level - 10] != levUpStoneCounter[SoulType.BLUE])
             return false;
-        if (level >= 15 && needWhiteStone[level - 15] != stoneCounter[SoulType.WHITE])
+        if (level >= 15 && needWhiteStone[level - 15] != levUpStoneCounter[SoulType.WHITE])
             return false;
         return true;
     }
 
     public void LevelUp()
     {
-        if (level != 20 && isStoneComplete())
-        { 
+        if (level != 20 && IsStoneComplete())
+        {
+            Debug.Log("Level UP!!!!!!!!!!!!!!!!!!!!!!");
             level++;
-            initStoneCounter();
+            InitLevUpStoneCounter();
             DetermineFrequency();
         }
     }

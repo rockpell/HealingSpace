@@ -37,7 +37,8 @@ public class ControllerManager : MonoBehaviour
                 {
                     preCharacter.DisplaySoulCubes(false);
                     preCharacter.IsClick = false;
-                    uiManager.RefreshStatusBar(nowCharacter);
+                    if (nowCharacter)
+                        uiManager.RefreshStatusBar(nowCharacter);
                 }
                 if (colider.gameObject.GetComponent<Character>() &&
                     Vector3.Distance(clickPoint, Input.mousePosition) < 0.25f) // when push the character, cubes appear.

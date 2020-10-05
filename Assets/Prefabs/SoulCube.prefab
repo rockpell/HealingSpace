@@ -98,8 +98,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sprite:
   - {fileID: 21300000, guid: 4a9c27022dfad3c4badb49f0c7666f0f, type: 3}
-  - {fileID: 21300000, guid: 235fb3c064b3b344781fa0a57144f2ab, type: 3}
   - {fileID: 21300000, guid: 358752c4492449b4daba9f8f3a5ea574, type: 3}
+  - {fileID: 21300000, guid: 235fb3c064b3b344781fa0a57144f2ab, type: 3}
   - {fileID: 21300000, guid: d4135317a950c5443bde84df59b45d3a, type: 3}
 --- !u!61 &933636601104903718
 BoxCollider2D:

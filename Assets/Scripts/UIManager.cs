@@ -10,6 +10,10 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Text level = null;
     [SerializeField] private Image love = null;
     [SerializeField] private Slider hp = null;
+    [SerializeField] private Text darkSoulCount = null;
+    [SerializeField] private Text blueSoulCount = null;
+    [SerializeField] private Text redSoulCount = null;
+    [SerializeField] private Text whiteSoulCount = null;
 
     // Start is called before the first frame update
     void Start()
@@ -18,9 +22,12 @@ public class UIManager : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
-        
+        if (Input.GetMouseButtonUp(0))
+        {
+            UpdateSoulCount();
+        }
     }
 
     public void ToggleStatusBar(bool value)
@@ -35,4 +42,13 @@ public class UIManager : MonoBehaviour
         love.fillAmount = character.Amour / 100;
         hp.value = character.Hp / 100;
     }
+
+    public void UpdateSoulCount()
+    {
+        darkSoulCount.text = GameManager.Instance.StoneCounter[SoulType.DARK].ToString();
+        redSoulCount.text = GameManager.Instance.StoneCounter[SoulType.RED].ToString();
+        blueSoulCount.text = GameManager.Instance.StoneCounter[SoulType.BLUE].ToString();
+        whiteSoulCount.text = GameManager.Instance.StoneCounter[SoulType.WHITE].ToString();
+    }
+
 }
