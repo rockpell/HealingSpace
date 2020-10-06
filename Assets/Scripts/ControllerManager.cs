@@ -66,6 +66,13 @@ public class ControllerManager : MonoBehaviour
                     nowCharacter = null;
                 }
             }
+            if (Input.GetMouseButton(0))
+            {
+                if (nowCharacter && nowCharacter.IsClick)
+                {
+                    nowCharacter.Love += 0.01f;
+                }
+            }
             if (Input.GetMouseButtonDown(0))
             {
                 if (colider.gameObject.GetComponent<Character>())
