@@ -38,8 +38,7 @@ public class UIManager : MonoBehaviour
     public void RefreshStatusBar(Character character)
     {
         name.text = character.NickName;
-        level.text = character.Level.ToString();
-        love.fillAmount = character.Amour / 100;
+        love.fillAmount = character.Love / 100;
         hp.value = character.Hp / 100;
     }
 

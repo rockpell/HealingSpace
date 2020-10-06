@@ -11,10 +11,9 @@ public class Character : MonoBehaviour
     [SerializeField] private float maxCharacterY = 0;
     [SerializeField] private float minCharacterY = 0;
 
-    private string nickName = null;
-    private int level = 0;
-    private int exp = 0;
-    private float amour = 0;
+    [SerializeField] private string nickName = null;
+ 
+    private float love = 0;
     private float hp = 100;
     private int darkSoul = 0;
     private int soulBuket = 1;
@@ -136,40 +135,16 @@ public class Character : MonoBehaviour
         }
     }
 
-    public int Exp
+    public float Love
     {
         get
         {
-            return this.exp;
-        }
-        set
-        {
-            this.exp = value;
-        }
-    }
-
-    public int Level
-    {
-        get
-        {
-            return this.level;
-        }
-        set
-        {
-            this.level = value;
-        }
-    }
-
-    public float Amour
-    {
-        get
-        {
-            return this.amour;
+            return this.love;
         }
 
         set
         {
-            this.amour = value;
+            this.love = value;
         }
     }
 
