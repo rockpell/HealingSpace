@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
+    [SerializeField] private ControllerManager controllerManager = null; 
     [SerializeField] private GameObject statusBar = null;
     [SerializeField] private Text name = null;
     [SerializeField] private Text level = null;
@@ -24,9 +25,11 @@ public class UIManager : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButton(0))
         {
             UpdateSoulCount();
+            if (controllerManager.NowCharacter)
+                RefreshStatusBar(controllerManager.NowCharacter);
         }
     }
 
