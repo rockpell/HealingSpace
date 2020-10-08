@@ -26,7 +26,7 @@ public class Monster : MonoBehaviour
         {
             // monsterCreator.IsMonster = false;
             Destroy(this.gameObject);
-            SceneManager.LoadScene("Battle");
+            SceneManager.LoadScene("Battle", LoadSceneMode.Additive);
         }
     }
 
