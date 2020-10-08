@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MonsterCreater : MonoBehaviour
+public class MonsterCreator : MonoBehaviour
 {
     [SerializeField] private GameObject[] monsters = null;
     [SerializeField] private float xMin;
@@ -11,6 +11,7 @@ public class MonsterCreater : MonoBehaviour
     [SerializeField] private float yMax;
     float time = 0;
     float maxTime = 1;
+    bool isMonster = false;
 
     // Start is called before the first frame update
     void Start()
@@ -24,7 +25,8 @@ public class MonsterCreater : MonoBehaviour
         time += Time.deltaTime;
         if (time > maxTime)
         {
-            RandomRespawn();
+            if (!isMonster)
+                RandomRespawn();
             time -= maxTime;
         }
     }
@@ -36,6 +38,7 @@ public class MonsterCreater : MonoBehaviour
         float y = Random.Range(yMin, yMax);
         Vector3 spawn = new Vector3(x, y, -1);
         Instantiate(monsters[i], spawn, Quaternion.identity);
+        isMonster = true;
     }
 
     private int StoneFrequency()
@@ -49,6 +52,11 @@ public class MonsterCreater : MonoBehaviour
             return 2;
         else
             return 3;
+    }
 
+    public bool IsMonster
+    {
+        get { return isMonster; }
+        set { isMonster = value; }
     }
 }

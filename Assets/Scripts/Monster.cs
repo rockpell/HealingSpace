@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class Monster : MonoBehaviour
 {
+    private MonsterCreator monsterCreator = null;
 
     void Start()
     {
@@ -23,8 +24,15 @@ public class Monster : MonoBehaviour
 
         if (character)
         {
+            // monsterCreator.IsMonster = false;
             Destroy(this.gameObject);
             SceneManager.LoadScene("Battle");
         }
+    }
+
+    public void SetMonsterCreator(MonsterCreator monsterCreator)
+    {
+        Debug.Log("mo::  " + monsterCreator);
+        this.monsterCreator = monsterCreator;
     }
 }
