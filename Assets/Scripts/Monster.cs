@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class Monster : MonoBehaviour
 {
     private MonsterCreator monsterCreator = null;
+    private SceneController sceneController = null;
 
     void Start()
     {

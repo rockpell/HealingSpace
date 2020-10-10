@@ -5,6 +5,7 @@ using UnityEngine;
 public class MonsterCreator : MonoBehaviour
 {
     [SerializeField] private GameObject[] monsters = null;
+    [SerializeField] private SceneController sceneController = null;
     [SerializeField] private float xMin;
     [SerializeField] private float xMax;
     [SerializeField] private float yMin;
@@ -37,7 +38,7 @@ public class MonsterCreator : MonoBehaviour
         float x = Random.Range(xMin, xMax);
         float y = Random.Range(yMin, yMax);
         Vector3 spawn = new Vector3(x, y, -1);
-        Instantiate(monsters[i], spawn, Quaternion.identity);
+        GameObject monster = Instantiate(monsters[i], spawn, Quaternion.identity);
         isMonster = true;
     }
 
