@@ -36,7 +36,7 @@ public class StoneCreator : MonoBehaviour
         float x = Random.Range(xMin, xMax);
         float y = Random.Range(yMin, yMax);
         Vector3 spawn = new Vector3(x, y, -1);
-        Instantiate(stones[i], spawn, Quaternion.identity);
+        Instantiate(stones[i], spawn, Quaternion.identity, this.transform.parent);
     }
 
     private int StoneFrequency()
