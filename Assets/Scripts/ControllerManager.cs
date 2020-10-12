@@ -6,6 +6,7 @@ public class ControllerManager : MonoBehaviour
 {
     [SerializeField] CameraController cameraController = null;
     [SerializeField] UIManager uiManager = null;
+    [SerializeField] HeartCreator heartCreator = null;
     private Character nowCharacter = null; // present selected character instance
     private Character preCharacter = null;
     private Vector3 clickPoint = Vector3.zero;
@@ -71,6 +72,7 @@ public class ControllerManager : MonoBehaviour
                 if (nowCharacter && nowCharacter.IsClick)
                 {
                     nowCharacter.Love += 0.01f;
+                    heartCreator.StartHeartEffect(nowCharacter.transform.position);
                 }
             }
             if (Input.GetMouseButtonDown(0))
