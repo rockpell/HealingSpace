@@ -7,3 +7,11 @@ public enum SoulType
     BLUE,
     WHITE
 }
+
+public enum BattleMode
+{
+    NONE =0,
+    NANTA,
+    RHYTHM,
+    SLICE
+}
