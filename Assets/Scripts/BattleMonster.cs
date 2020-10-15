@@ -14,15 +14,18 @@ public class BattleMonster : MonoBehaviour
     [SerializeField] private GameObject item = null; // getting item when take the monster down.
 
     private float monsterHp = 100;
-    private float speed = 0.1f;
+    private float speed = 1f;
     private Vector3 maxSize = new Vector3(2.5f, 2.5f, 0);
     private Vector3 minSize = new Vector3(0.5f, 0.5f, 0);
     private int count = 0;
-    private BattleMode battleMode = BattleMode.NONE;
+    private BattleMode battleMode = BattleMode.NANTA;
+    private bool upDown = false;
+    private Vector2 downPos = Vector2.zero;
+    private Vector2 upPos = Vector2.zero;
+    private float sliceMin = 5000f;
 
     void Start()
     {
-        
     }
 
     void Update()
@@ -30,11 +33,32 @@ public class BattleMonster : MonoBehaviour
         Vector2 touchPos = Camera.main.ScreenToWorldPoint(Input.mousePosition); // because it is mousePos
         Collider2D colider = Physics2D.OverlapPoint(touchPos);
 
-        if (colider && colider.gameObject.GetComponent<BattleMonster>())
+        switch (battleMode)
         {
-            BeatingEffect();
-            Beating();
+            case BattleMode.NANTA:
+                if (colider && colider.gameObject.GetComponent<BattleMonster>())
+                {
+                    BeatingEffect();
+                    Beating();
+                }
+                break;
+
+            case BattleMode.RHYTHM:
+                Rhythm();
+                if (colider && colider.gameObject.GetComponent<BattleMonster>())
+                {
+                    AttackTiming();
+                }
+                break;
+
+            case BattleMode.SLICE:
+                SliceAttack();
+                break;
+
+            case BattleMode.END:
+                break;
         }
+        Debug.Log(battleMode);
     }
     // 한번 누를때 스케일 0.2 증가 뗄때 0.2 감소
     // 공격 당하면 스케일 0.05감소
@@ -43,6 +67,13 @@ public class BattleMonster : MonoBehaviour
     {
         if (Input.GetMouseButtonUp(0))
             this.transform.localScale -= new Vector3(0.1f, 0.1f, 0);
+        // reduce hp
+
+        if (this.transform.localScale.x < 1)
+        {
+            battleMode = BattleMode.RHYTHM;
+            teduri.gameObject.SetActive(true);
+        }
     }
 
     private void BeatingEffect()
@@ -53,21 +84,25 @@ public class BattleMonster : MonoBehaviour
             this.transform.localScale -= new Vector3(0.05f, 0.05f, 0);
     }
 
-    private void Rhythm() // 테두리가 커졌다 작아졌다
+    private void Rhythm() // size of teduri up and down
     {
         Vector3 size = teduri.transform.localScale;
 
-        if (size.x < maxSize.x && size.y < maxSize.y)
+        if (upDown && size.x < maxSize.x && size.y < maxSize.y)
         { 
-            size += new Vector3(0.01f, 0.01f, 0) * Time.deltaTime * speed;
+            size += new Vector3(speed, speed, 0) * Time.deltaTime;
             teduri.transform.localScale = size;
+            if (maxSize.x - size.x < 0.1f)
+                upDown = !upDown;
         }
-        else if (size.x > minSize.x && size.y > minSize.y)
+        else if (!upDown && size.x > minSize.x && size.y > minSize.y)
         {
-            size -= new Vector3(0.01f, 0.01f, 0) * Time.deltaTime * speed;
+            size -= new Vector3(speed, speed, 0) * Time.deltaTime;
             teduri.transform.localScale = size;
+            if (size.x - minSize.x < 0.1f)
+                upDown = !upDown;
         }
-    }// need to add toggle flag
+    }
 
     private void AttackTiming()
     {
@@ -75,20 +110,43 @@ public class BattleMonster : MonoBehaviour
         float x = Mathf.Abs(size.x - this.transform.localScale.x);
         float y = Mathf.Abs(size.y - this.transform.localScale.y);
 
-        if (x < 0.1f && y < 0.1f)
+        if (Input.GetMouseButtonUp(0))
         {
-            //damaged
-            count++;
-            if (count >= 2)
+            if (x < 0.1f && y < 0.1f)
             {
-                //change to slice mode
+                // damaged ( reduce moster hp )
+                count++;
+                if (count >= 2)
+                {
+                    battleMode = BattleMode.SLICE;
+                    teduri.gameObject.SetActive(false);
+                }
             }
+            else
+            {
+                // character hp reduce
+                if (count > 0)
+                    count--;
+            }
+            Debug.Log(count);
         }
-
     }
 
     private void SliceAttack() // 최후의 한방!
     {
+        //if (success)
+        // battle end && scene change
+
+        if (Input.GetMouseButtonDown(0))
+            downPos = Camera.main.WorldToScreenPoint(Input.mousePosition);
+        if (Input.GetMouseButtonUp(0))
+        {
+            upPos = Camera.main.WorldToScreenPoint(Input.mousePosition);
+            if (Vector2.Distance(downPos, upPos) > sliceMin)
+            {
+                battleMode = BattleMode.END;
+            }
+        }
 
     }
 }

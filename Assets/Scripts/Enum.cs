@@ -13,5 +13,6 @@ public enum BattleMode
     NONE =0,
     NANTA,
     RHYTHM,
-    SLICE
+    SLICE,
+    END
 }
