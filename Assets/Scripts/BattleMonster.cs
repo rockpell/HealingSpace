@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using UnityEngine;
@@ -40,6 +39,7 @@ public class BattleMonster : MonoBehaviour
                 {
                     BeatingEffect();
                     Beating();
+                    PouringEffect();
                 }
                 break;
 
@@ -147,6 +147,26 @@ public class BattleMonster : MonoBehaviour
                 battleMode = BattleMode.END;
             }
         }
+    }
 
+    private void EndMode()
+    {
+        // dialog console appear
+        // dead monster fade out animation
+        // kakao bank animation
+        // show what player get
+        // confirm button for change to space scene
+    }
+
+    private void PouringEffect()         // kakao bank animation
+    {
+        float randX = Random.Range(-0.5f, 0.5f);
+        float randY = Random.Range(-0.5f, 0.5f);
+        Vector3 offsetPos = new Vector3(randX, randY, -1);
+        randX = Random.Range(-1f, 1f);
+        randY = Random.Range(0.5f, 1.5f);
+        Vector3 randomDirection = new Vector3(randX, randY, 0);
+        GameObject stones = Instantiate(item, this.transform.position + offsetPos, Quaternion.identity, this.transform.parent);
+        stones.GetComponent<Rigidbody2D>().AddForce(randomDirection * 150);
     }
 }
